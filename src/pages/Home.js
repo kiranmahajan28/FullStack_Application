@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { Link, useParams } from 'react-router-dom';
 export default function Home() {
 
     const [users,Setusers]=useState([])
     
+    const {id}=useParams()
+
     useEffect(()=>{
         loadUesers();
 
@@ -14,6 +17,10 @@ export default function Home() {
          Setusers(result.data);
     }
 
+    const deleteUser = async (id)=>{
+        await axios.delete(`http://localhost:8080/user/${id}`);
+        loadUesers();
+    }
 
   return(
     <div className='container'>
@@ -21,7 +28,7 @@ export default function Home() {
         <table className="table border shadow ">
             <thead>
                 <tr>
-                <th scope="col">#</th>
+                <th scope="col">S.N</th>
                 <th scope="col">First</th>
                 <th scope="col">UserName</th>
                 <th scope="col">Email ID</th>
@@ -40,9 +47,10 @@ export default function Home() {
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 
-                <button className="btn btn-primary max-2">View</button>
-                <button className="btn btn-outline-primary max-2">Edit</button>
-                <button className="btn btn-danger max-2">Delete</button>
+                <Link className="btn btn-primary max-2" to={`viewuser/${user.id}`}>View</Link>
+                <Link className="btn btn-outline-primary max-2" to={`edituser/${user.id}`}>Edit</Link>
+                <button className="btn btn-danger max-2" 
+                    onClick={()=> deleteUser(user.id)}>Delete</button>
 
                 </tr>
                 )}
